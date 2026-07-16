@@ -1,9 +1,13 @@
 from fastapi import FastAPI, HTTPException ,status
 from pydantic import BaseModel
 
+class TaskUpdate(BaseModel):
+    title: str
+    done: bool
+
 class TaskCreate(BaseModel):
     title: str
-    
+
 
 
 class Task(BaseModel):
@@ -48,3 +52,21 @@ def create_task(task: TaskCreate):
     tasks.append(new_task)
 
     return new_task
+
+@app.put("/tasks/{task_id}", status_code=200)
+def update_task(task_id: int, updated_task: TaskUpdate):
+    for i, task in enumerate(tasks):
+        if task.id == task_id:
+            if not updated_task.title.strip():
+                raise HTTPException(status_code=400, detail="Title cannot be empty")
+            tasks[i] = Task(id=task_id, title=updated_task.title, done=updated_task.done)
+            return tasks[i]
+    raise HTTPException(status_code=404, detail="Task not found")
+
+@app.delete("/tasks/{task_id}", status_code=204)
+def delete_task(task_id: int):
+    global tasks
+    task_exists = any(task.id == task_id for task in tasks)
+    if not task_exists:
+        raise HTTPException(status_code=404, detail="Task not found")
+    tasks = [task for task in tasks if task.id != task_id]
