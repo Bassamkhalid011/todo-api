@@ -1,15 +1,31 @@
 # Task API
 
-> A production-style REST API for managing tasks — built with FastAPI & Python.
+> A production-style REST API for managing tasks — built with FastAPI & PostgreSQL.
 
 ---
 
 ## What is this?
 
 A full CRUD API that lets you create, read, update, and delete tasks.
-Built from scratch as part of the **FlyRank Backend Engineering Track — Week 2**.
+Built as part of the **FlyRank Backend Engineering Track — Week 2**.
 
-Tasks are stored in memory — no database yet. Data resets on server restart.
+Tasks are stored in **PostgreSQL** running in Docker.
+Data persists across restarts.
+
+---
+
+## Architecture
+
+This project uses a layered architecture — Repository Pattern:
+
+| Layer | Responsibility |
+|-------|---------------|
+| **Routes** | HTTP only — request/response |
+| **Service** | Business logic — validation rules |
+| **Repository** | Data storage — PostgreSQL or Memory |
+
+Swapping from in-memory to PostgreSQL required changing **only one line** in `main.py`.
+Service and routes were completely unchanged — that's the architecture proving itself.
 
 ---
 
@@ -21,34 +37,32 @@ Tasks are stored in memory — no database yet. Data resets on server restart.
 | FastAPI | Web framework |
 | Pydantic | Data validation |
 | Uvicorn | ASGI server |
+| PostgreSQL | Database |
+| Docker | Containerization |
+| psycopg2 | PostgreSQL driver |
 
 ---
 
-## Installation & Setup
+## How to Run
 
 **1. Clone the repository**
 ```bash
-git clone https://github.com/YOUR_USERNAME/todo-api.git
+git clone https://github.com/YOUR_USERNAME/task-api.git
 cd task-api
 ```
 
-**2. Create and activate virtual environment**
+**2. Setup environment**
 ```bash
-python -m venv venv
-venv\Scripts\activate
+cp .env.example .env
 ```
 
-**3. Install dependencies**
+**3. Start everything with one command**
 ```bash
-pip install fastapi uvicorn
+docker compose up
 ```
 
-**4. Run the server**
-```bash
-uvicorn main:app --reload
-```
+App runs on: `http://127.0.0.1:8000`
 
-**5. Open in browser**
 ---
 
 ## API Endpoints
@@ -72,13 +86,11 @@ curl -i http://127.0.0.1:8000/tasks
 ```
 ```
 HTTP/1.1 200 OK
-date: Thu, 16 Jul 2026 17:49:00 GMT
-server: uvicorn
-content-length: 117
 content-type: application/json
 
-[{"id":1,"title":"Task 1","done":true}...]
+[{"id":1,"title":"Buy milk","done":false}]
 ```
+
 ---
 
 ## Status Codes
@@ -93,6 +105,26 @@ content-type: application/json
 
 ---
 
+## Validation Rules
+
+- `title` is required for POST and PUT
+- Empty or blank titles are rejected with `400 Bad Request`
+- Unknown task IDs return `404 Not Found`
+
+---
+
+## Persistence Proof
+
+1. Started the app with `docker compose up`
+2. Created tasks via POST `/tasks`
+3. Stopped containers with `CTRL+C`
+4. Restarted with `docker compose up`
+5. GET `/tasks` returned the same tasks ✅
+
+Data survives full container + app restart.
+
+---
+
 ## Interactive Docs (Swagger UI)
 
 FastAPI generates interactive documentation automatically.
@@ -103,11 +135,23 @@ FastAPI generates interactive documentation automatically.
 
 ---
 
-## Validation Rules
+## Project Structure
 
-- `title` is required for POST and PUT
-- Empty or blank titles are rejected with `400 Bad Request`
-- Unknown task IDs return `404 Not Found`
+```
+task-api/
+├── main.py              # FastAPI app + routes
+├── models.py            # Pydantic models
+├── service.py           # Business logic
+├── repository/
+│   ├── base.py          # Abstract interface
+│   ├── memory.py        # In-memory implementation
+│   └── postgres.py      # PostgreSQL implementation
+├── init.sql             # Table creation
+├── docker-compose.yml   # App + DB together
+├── requirements.txt     # Dependencies
+├── .env                 # Secrets (gitignored)
+└── .env.example         # Template for .env
+```
 
 ---
 
