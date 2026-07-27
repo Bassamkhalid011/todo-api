@@ -1,45 +1,25 @@
 # Task API
 
-> A production-style REST API for managing tasks — built with FastAPI & PostgreSQL.
+> A production-style REST API for managing tasks — built with FastAPI & SQLite.
 
 ---
 
 ## What is this?
 
 A full CRUD API that lets you create, read, update, and delete tasks.
-Built as part of the **FlyRank Backend Engineering Track — Week 2**.
+Built as part of the **FlyRank Backend Engineering Track — Week 3 (A2)**.
 
-Tasks are stored in **PostgreSQL** running in Docker.
-Data persists across restarts.
-
----
-
-## Architecture
-
-This project uses a layered architecture — Repository Pattern:
-
-| Layer | Responsibility |
-|-------|---------------|
-| **Routes** | HTTP only — request/response |
-| **Service** | Business logic — validation rules |
-| **Repository** | Data storage — PostgreSQL or Memory |
-
-Swapping from in-memory to PostgreSQL required changing **only one line** in `main.py`.
-Service and routes were completely unchanged — that's the architecture proving itself.
+Tasks are stored in **SQLite** (`tasks.db`) — a single file database.
+Data persists across server restarts automatically.
 
 ---
 
-## Tech Stack
+## Why SQLite?
 
-| Tool | Purpose |
-|------|---------|
-| Python 3.11 | Core language |
-| FastAPI | Web framework |
-| Pydantic | Data validation |
-| Uvicorn | ASGI server |
-| PostgreSQL | Database |
-| Docker | Containerization |
-| psycopg2 | PostgreSQL driver |
+- Zero setup — no server to install or run
+- Single file (`tasks.db`) created automatically on first run
+- Perfect for development, testing, and lightweight applications
+- Data survives server restarts
 
 ---
 
@@ -47,21 +27,33 @@ Service and routes were completely unchanged — that's the architecture proving
 
 **1. Clone the repository**
 ```bash
-git clone https://github.com/YOUR_USERNAME/task-api.git
-cd task-api
+git clone https://github.com/Bassamkhalid011/todo-api.git
+cd todo-api
+git checkout a2-sqlite
 ```
 
-**2. Setup environment**
+**2. Create and activate virtual environment**
 ```bash
-cp .env.example .env
+python -m venv venv
+venv\Scripts\activate
 ```
 
-**3. Start everything with one command**
+**3. Install dependencies**
 ```bash
-docker compose up
+pip install fastapi uvicorn
 ```
 
-App runs on: `http://127.0.0.1:8000`
+**4. Run the server**
+```bash
+uvicorn main:app --reload
+```
+
+**5. Open in browser**
+```
+http://127.0.0.1:8000/docs
+```
+
+Database (`tasks.db`) is created automatically — no manual setup needed.
 
 ---
 
@@ -88,7 +80,7 @@ curl -i http://127.0.0.1:8000/tasks
 HTTP/1.1 200 OK
 content-type: application/json
 
-[{"id":1,"title":"Buy milk","done":false}]
+[{"id":1,"title":"Task 1","done":0}]
 ```
 
 ---
@@ -113,15 +105,26 @@ content-type: application/json
 
 ---
 
+## Example SQL Query
+
+```sql
+SELECT * FROM tasks WHERE done = 1;
+```
+
+This query returns all completed tasks directly from the SQLite database.
+Running it in DB Browser while the API is live shows the same data — one source of truth.
+
+---
+
 ## Persistence Proof
 
-1. Started the app with `docker compose up`
+1. Started the server with `uvicorn main:app --reload`
 2. Created tasks via POST `/tasks`
-3. Stopped containers with `CTRL+C`
-4. Restarted with `docker compose up`
+3. Stopped the server with `CTRL+C`
+4. Restarted the server
 5. GET `/tasks` returned the same tasks ✅
 
-Data survives full container + app restart.
+Data survives server restarts because it lives in `tasks.db` on disk.
 
 ---
 
@@ -135,22 +138,24 @@ FastAPI generates interactive documentation automatically.
 
 ---
 
+## Database Screenshot
+
+![DB Browser](db-screenshot.png)
+
+---
+
 ## Project Structure
 
 ```
-task-api/
-├── main.py              # FastAPI app + routes
-├── models.py            # Pydantic models
-├── service.py           # Business logic
-├── repository/
-│   ├── base.py          # Abstract interface
-│   ├── memory.py        # In-memory implementation
-│   └── postgres.py      # PostgreSQL implementation
-├── init.sql             # Table creation
-├── docker-compose.yml   # App + DB together
-├── requirements.txt     # Dependencies
-├── .env                 # Secrets (gitignored)
-└── .env.example         # Template for .env
+todo-api/
+├── main.py          # FastAPI app + SQLite logic
+├── models.py        # Pydantic models
+├── tasks.db         # SQLite database (auto-created, git-ignored)
+├── requirements.txt # Dependencies
+├── .gitignore       # Ignores .env, tasks.db, venv
+├── swagger.png      # Swagger UI screenshot
+├── db-screenshot.png # DB Browser screenshot
+└── README.md
 ```
 
 ---
@@ -158,4 +163,4 @@ task-api/
 ## Author
 
 **Bassam Khalid**  
-FlyRank Backend Engineering Track — Week 2
+FlyRank Backend Engineering Track — Week 3 · Assignment A2
