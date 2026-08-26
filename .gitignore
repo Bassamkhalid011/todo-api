@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 venv/
 tasks.db
+llm/logs/quarantine.jsonl
+llm/logs/cost.jsonl
