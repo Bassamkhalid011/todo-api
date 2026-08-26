@@ -90,6 +90,10 @@ Swagger UI: `http://localhost:8000/docs`
 
 ---
 
+## Swagger UI Screenshot
+
+![Swagger UI](swagger.png)
+
 ## Architecture
 
 All logic lives in `auth/main.py`:
