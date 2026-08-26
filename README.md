@@ -7,7 +7,7 @@
 ## What is this?
 
 A full CRUD API that lets you create, read, update, and delete tasks.
-Built as part of the **FlyRank Backend Engineering Track — Week 2**.
+Built as part of the **FlyRank Backend Engineering Track **.
 
 Tasks are stored in **PostgreSQL** running in Docker.
 Data persists across restarts.
