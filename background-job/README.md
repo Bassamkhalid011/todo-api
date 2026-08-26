@@ -61,9 +61,11 @@ Bad input is rejected at the door with 400 — no job is created. A temporary fa
 
 ## Dashboard screenshot
 
-Add a screenshot here showing:
-- `make-report` with its two steps (completed run)
-- A failed run with 3 retry attempts (topic: "fail")
+![Inngest Dashboard](dashboard.png)
+
+The screenshot shows:
+- `make-report` completed run with `do-the-slow-work` and `build-report` steps
+- A failed run (topic: "fail") — 3 attempts, final status: Failed
 - `heartbeat` cron runs, one minute apart
 
 ## Folder structure

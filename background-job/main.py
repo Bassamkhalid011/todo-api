@@ -1,5 +1,6 @@
 import uuid
 
+import inngest
 from fastapi import FastAPI, HTTPException, Response
 from inngest.fast_api import serve
 from pydantic import BaseModel
@@ -36,7 +37,7 @@ async def create_report(body: ReportRequest):
     }
 
     await inngest_client.send(
-        inngest_client.build_event(
+        inngest.Event(
             name="report/requested",
             data={"id": report_id, "topic": body.topic},
         )
