@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "text": "The login button is completely broken. Our entire team cannot access the dashboard and we have a client presentation in one hour.",
+    "source": "email",
+    "expected_category": "bug",
+    "expected_priority": "high"
+  },
+  {
+    "id": 2,
+    "text": "Would it be possible to add a dark mode to the dashboard? It would make long working sessions much more comfortable.",
+    "source": "form",
+    "expected_category": "feature",
+    "expected_priority": "low"
+  },
+  {
+    "id": 3,
+    "text": "How do I export my data to CSV? I cannot find the option anywhere in the settings.",
+    "source": "slack",
+    "expected_category": "question",
+    "expected_priority": "low"
+  },
+  {
+    "id": 4,
+    "text": "The export works but it sometimes skips the last row when the dataset is over 1000 entries. Not a blocker but should be fixed.",
+    "source": "email",
+    "expected_category": "bug",
+    "expected_priority": "medium"
+  },
+  {
+    "id": 5,
+    "text": "We noticed our API keys were exposed in the server logs. This is a critical security issue that needs immediate attention.",
+    "source": "email",
+    "expected_category": "bug",
+    "expected_priority": "high"
+  },
+  {
+    "id": 6,
+    "text": "Can you add the ability to assign tickets to multiple team members at once instead of just one?",
+    "source": "form",
+    "expected_category": "feature",
+    "expected_priority": "low"
+  },
+  {
+    "id": 7,
+    "text": "What are the rate limits for the API? I want to know how many requests per minute I can make.",
+    "source": "slack",
+    "expected_category": "question",
+    "expected_priority": "low"
+  },
+  {
+    "id": 8,
+    "text": "I wanted to say thank you for the quick support last week. The team was very helpful.",
+    "source": "email",
+    "expected_category": "other",
+    "expected_priority": "low"
+  }
+]
